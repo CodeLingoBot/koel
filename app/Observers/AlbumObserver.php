@@ -20,16 +20,5 @@ class AlbumObserver
         $this->deleteAlbumCover($album);
     }
 
-    private function deleteAlbumCover(Album $album): void
-    {
-        if (!$album->has_cover) {
-            return;
-        }
-
-        try {
-            unlink($album->cover_path);
-        } catch (Exception $e) {
-            $this->logger->error($e);
-        }
-    }
+    
 }

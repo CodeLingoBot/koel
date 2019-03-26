@@ -75,12 +75,5 @@ class SmartPlaylistService
         return $rules;
     }
 
-    private function createRequireUserRule(User $user, string $modelPrefix): array
-    {
-        return [
-            'model' => $modelPrefix.'user_id',
-            'operator' => 'is',
-            'value' => [$user->id],
-        ];
-    }
+    
 }

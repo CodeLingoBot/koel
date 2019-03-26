@@ -40,14 +40,7 @@ class MediaCacheService
      *
      * @return mixed[]
      */
-    private function query(): array
-    {
-        return [
-            'albums' => Album::orderBy('name')->get(),
-            'artists' => Artist::orderBy('name')->get(),
-            'songs' => Song::all(),
-        ];
-    }
+    
 
     /**
      * Clear the media cache.

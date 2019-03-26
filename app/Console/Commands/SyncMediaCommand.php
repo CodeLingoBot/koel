@@ -126,23 +126,5 @@ class SyncMediaCommand extends Command
         $this->progressBar->advance();
     }
 
-    private function ensureMediaPath(): void
-    {
-        if (Setting::get('media_path')) {
-            return;
-        }
-
-        $this->warn("Media path hasn't been configured. Let's set it up.");
-
-        while (true) {
-            $path = $this->ask('Absolute path to your media directory');
-
-            if (is_dir($path) && is_readable($path)) {
-                Setting::set('media_path', $path);
-                break;
-            }
-
-            $this->error('The path does not exist or is not readable. Try again.');
-        }
-    }
+    
 }

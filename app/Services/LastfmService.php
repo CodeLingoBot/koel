@@ -82,17 +82,7 @@ class LastfmService extends ApiClient implements ApiConsumerInterface
      *
      * @return mixed[]
      */
-    private function buildArtistInformation(array $artistData): array
-    {
-        return [
-            'url' => array_get($artistData, 'url'),
-            'image' => count($artistData['image']) > 3 ? $artistData['image'][3] : $artistData['image'][0],
-            'bio' => [
-                'summary' => $this->formatText(array_get($artistData, 'bio.summary', '')),
-                'full' => $this->formatText(array_get($artistData, 'bio.content', '')),
-            ],
-        ];
-    }
+    
 
     /**
      * Get information about an album.
@@ -141,24 +131,7 @@ class LastfmService extends ApiClient implements ApiConsumerInterface
      *
      * @return mixed[]
      */
-    private function buildAlbumInformation(array $albumData): array
-    {
-        return [
-            'url' => array_get($albumData, 'url'),
-            'image' => count($albumData['image']) > 3 ? $albumData['image'][3] : $albumData['image'][0],
-            'wiki' => [
-                'summary' => $this->formatText(array_get($albumData, 'wiki.summary', '')),
-                'full' => $this->formatText(array_get($albumData, 'wiki.content', '')),
-            ],
-            'tracks' => array_map(function ($track) {
-                return [
-                    'title' => $track['name'],
-                    'length' => (int) $track['duration'],
-                    'url' => $track['url'],
-                ];
-            }, array_get($albumData, 'tracks.track', [])),
-        ];
-    }
+    
 
     /**
      * Get Last.fm's session key for the authenticated user using a token.

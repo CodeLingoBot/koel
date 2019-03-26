@@ -39,16 +39,7 @@ class Rule
     private $model;
     private $parameterFactory;
 
-    private function __construct(array $config)
-    {
-        $this->validateOperator($config['operator']);
-
-        $this->value = $config['value'];
-        $this->model = $config['model'];
-        $this->operator = $config['operator'];
-
-        $this->parameterFactory = new SmartPlaylistRuleParameterFactory();
-    }
+    
 
     public static function create(array $config): self
     {
@@ -81,21 +72,7 @@ class Rule
      * Resolve the logic of a (sub)query base on the configured operator.
      * Basically, if the operator is "between," we use "whereBetween." Otherwise, it's "where." Simple.
      */
-    private function resolveLogic(): string
-    {
-        return $this->operator === self::OPERATOR_IS_BETWEEN ? 'whereBetween' : 'where';
-    }
+    
 
-    private function validateOperator(string $operator): void
-    {
-        if (!in_array($operator, self::VALID_OPERATORS, true)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    '%s is not a valid value for operators. Valid values are: %s',
-                    $operator,
-                    implode(', ', self::VALID_OPERATORS)
-                )
-            );
-        }
-    }
+    
 }

@@ -81,10 +81,7 @@ abstract class TestCase extends BaseTestCase
         ]);
     }
 
-    private function generateJwtToken(?User $user): string
-    {
-        return $this->auth->fromUser($user ?: factory(User::class)->create());
-    }
+    
 
     protected function tearDown()
     {

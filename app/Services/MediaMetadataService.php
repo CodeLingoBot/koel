@@ -94,18 +94,12 @@ class MediaMetadataService
      *
      * @param string $extension The extension of the cover (without dot)
      */
-    private function generateAlbumCoverPath($extension): string
-    {
-        return sprintf('%s/public/img/covers/%s.%s', app()->publicPath(), uniqid('', true), $extension);
-    }
+    
 
     /**
      * Generate a random path for an artist image.
      *
      * @param string $extension The extension of the cover (without dot)
      */
-    private function generateArtistImagePath($extension): string
-    {
-        return sprintf('%s/public/img/artists/%s.%s', app()->publicPath(), uniqid('', true), $extension);
-    }
+    
 }

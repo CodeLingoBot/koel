@@ -178,35 +178,12 @@ class MediaSyncService
      *
      * @throws Exception
      */
-    private function syncFileRecord(WatchRecordInterface $record): void
-    {
-        $path = $record->getPath();
-        $this->logger->info("'$path' is a file.");
-
-        // If the file has been deleted...
-        if ($record->isDeleted()) {
-            $this->handleDeletedFileRecord($path);
-        }
-        // Otherwise, it's a new or changed file. Try to sync it in.
-        elseif ($record->isNewOrModified()) {
-            $this->handleNewOrModifiedFileRecord($path);
-        }
-    }
+    
 
     /**
      * Sync a directory's watch record.
      */
-    private function syncDirectoryRecord(WatchRecordInterface $record): void
-    {
-        $path = $record->getPath();
-        $this->logger->info("'$path' is a directory.");
-
-        if ($record->isDeleted()) {
-            $this->handleDeletedDirectoryRecord($path);
-        } elseif ($record->isNewOrModified()) {
-            $this->handleNewOrModifiedDirectoryRecord($path);
-        }
-    }
+    
 
     /**
      * Construct an array of tags to be synced into the database from an input array of tags.
@@ -242,64 +219,16 @@ class MediaSyncService
         Artist::deleteWhereIDsNotIn(array_filter($inUseArtists));
     }
 
-    private function setSystemRequirements(): void
-    {
-        if (!app()->runningInConsole()) {
-            set_time_limit(config('koel.sync.timeout'));
-        }
-
-        if (config('koel.memory_limit')) {
-            ini_set('memory_limit', config('koel.memory_limit').'M');
-        }
-    }
+    
 
     /**
      * @throws Exception
      */
-    private function handleDeletedFileRecord(string $path): void
-    {
-        if ($song = $this->songRepository->getOneByPath($path)) {
-            $song->delete();
-            $this->logger->info("$path deleted.");
+    
 
-            event(new LibraryChanged());
-        } else {
-            $this->logger->info("$path doesn't exist in our database--skipping.");
-        }
-    }
+    
 
-    private function handleNewOrModifiedFileRecord(string $path): void
-    {
-        $result = $this->fileSynchronizer->setFile($path)->sync($this->tags);
+    
 
-        if ($result === FileSynchronizer::SYNC_RESULT_SUCCESS) {
-            $this->logger->info("Synchronized $path");
-        } else {
-            $this->logger->info("Failed to synchronized $path. Maybe an invalid file?");
-        }
-
-        event(new LibraryChanged());
-    }
-
-    private function handleDeletedDirectoryRecord(string $path): void
-    {
-        if ($count = Song::inDirectory($path)->delete()) {
-            $this->logger->info("Deleted $count song(s) under $path");
-
-            event(new LibraryChanged());
-        } else {
-            $this->logger->info("$path is empty--no action needed.");
-        }
-    }
-
-    private function handleNewOrModifiedDirectoryRecord(string $path): void
-    {
-        foreach ($this->gatherFiles($path) as $file) {
-            $this->fileSynchronizer->setFile($file)->sync($this->tags);
-        }
-
-        $this->logger->info("Synced all song(s) under $path");
-
-        event(new LibraryChanged());
-    }
+    
 }

@@ -19,8 +19,5 @@ class SongObserver
         $this->setFileHashAsId($song);
     }
 
-    private function setFileHashAsId(Song $song): void
-    {
-        $song->id = $this->helperService->getFileHash($song->path);
-    }
+    
 }

@@ -260,23 +260,7 @@ class FileSynchronizer
      *
      * @param mixed[]|null $coverData
      */
-    private function generateAlbumCover(Album $album, ?array $coverData): void
-    {
-        // If the album has no cover, we try to get the cover image from existing tag data
-        if ($coverData) {
-            $extension = explode('/', $coverData['image_mime']);
-            $extension = empty($extension[1]) ? 'png' : $extension[1];
-
-            $this->mediaMetadataService->writeAlbumCover($album, $coverData['data'], $extension);
-
-            return;
-        }
-
-        // Or, if there's a cover image under the same directory, use it.
-        if ($cover = $this->getCoverFileUnderSameDirectory()) {
-            $this->mediaMetadataService->copyAlbumCover($album, $cover);
-        }
-    }
+    
 
     /**
      * Issue #380.
@@ -285,40 +269,9 @@ class FileSynchronizer
      *
      * @throws InvalidArgumentException
      */
-    private function getCoverFileUnderSameDirectory(): ?string
-    {
-        // As directory scanning can be expensive, we cache and reuse the result.
-        return $this->cache->remember(md5($this->filePath.'_cover'), 24 * 60, function (): ?string {
-            $matches = array_keys(iterator_to_array(
-                    $this->finder->create()
-                        ->depth(0)
-                        ->ignoreUnreadableDirs()
-                        ->files()
-                        ->followLinks()
-                        ->name('/(cov|fold)er\.(jpe?g|png)$/i')
-                        ->in(dirname($this->filePath))
-                )
-            );
+    
 
-            $cover = $matches ? $matches[0] : null;
-
-            // Even if a file is found, make sure it's a real image.
-            if ($cover && !$this->isImage($cover)) {
-                $cover = null;
-            }
-
-            return $cover;
-        });
-    }
-
-    private function isImage(string $path): bool
-    {
-        try {
-            return (bool) exif_imagetype($path);
-        } catch (Exception $e) {
-            return false;
-        }
-    }
+    
 
     /**
      * Determine if the file is new (its Song record can't be found in the database).

@@ -26,10 +26,7 @@ class SmartPlaylistServiceTest extends TestCase
         parent::tearDown();
     }
 
-    private function readFixtureFile(string $fileName): array
-    {
-        return json_decode(file_get_contents(__DIR__.'/../../blobs/rules/'.$fileName), true);
-    }
+    
 
     public function provideRules(): array
     {
